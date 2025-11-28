@@ -1,27 +1,22 @@
 package com.estudo.ajudame.service;
 
-import com.estudo.ajudame.DTO.OngDTO;
-import com.estudo.ajudame.entities.OngEntity;
-import com.estudo.ajudame.repositorys.OngRespository;
+import com.estudo.ajudame.repository.IOngRepository;
 import lombok.extern.slf4j.Slf4j;
+import model.Ong;
 import org.springframework.stereotype.Service;
 
 
 @Service
 @Slf4j
 public class OngService {
-
-    private OngRespository repository;
-
-    public OngService(OngRespository repository) {
-        this.repository = repository;
+    private IOngRepository IOngRepository;
+    public Ong cadastrarOng(Ong ong){
+        this.IOngRepository.salvar(ong);
+        System.out.printf("Entrou na camada de serviço: %s%n", ong);
+        return new Ong(
+                "Instituto Aurora Social",
+                "39458276000145",
+                "2025-01-12"
+        );
     }
-
-    public OngEntity cadastrarOng(OngDTO ongDTO){
-        OngEntity ongEntity = OngDTO.DTOToEntity(ongDTO);
-        repository.save(ongEntity);
-        log.info("Ong cadastrada com sucesso! Ong ID: {}", ongEntity.getId());
-        return ongEntity;
-    }
-
 }

@@ -1,6 +1,5 @@
-package com.estudo.ajudame.controllers;
+package com.estudo.ajudame.controller;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class OngControllerTest {
