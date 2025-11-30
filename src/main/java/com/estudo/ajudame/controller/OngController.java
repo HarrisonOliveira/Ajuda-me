@@ -2,17 +2,22 @@ package com.estudo.ajudame.controller;
 
 import com.estudo.ajudame.controller.request.OngRequest;
 import com.estudo.ajudame.service.OngService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import model.Ong;
+import com.estudo.ajudame.domain.entity.Ong;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/ongs")
+@RequestMapping("/api/v1/ongs")
+@Tag(name = "ONGs", description = "API para gerenciamento de Organizações Não Governamentais")
 public class OngController {
 
     private final OngService ongService;
@@ -21,9 +26,69 @@ public class OngController {
         this.ongService = ongService;
     }
 
-    @PostMapping("/cadastro")
-    public ResponseEntity<Ong> cadastroOng(@Valid @RequestBody OngRequest ongRequest) {
-        Ong ongCadastrada = this.ongService.cadastrarOng(ongRequest.ongDomain());
+    @PostMapping
+    @Operation(summary = "Cadastrar nova ONG", description = "Cadastra uma nova ONG no sistema")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "ONG cadastrada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
+            @ApiResponse(responseCode = "409", description = "ONG com CNPJ já existe"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+    })
+    public ResponseEntity<Ong> cadastrarOng(@Valid @RequestBody OngRequest ongRequest) {
+        Ong ongCadastrada = this.ongService.cadastrarOng(ongRequest.toEntity());
         return ResponseEntity.status(HttpStatus.CREATED).body(ongCadastrada);
+    }
+
+    @GetMapping
+    @Operation(summary = "Listar todas as ONGs", description = "Retorna uma lista com todas as ONGs cadastradas")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de ONGs retornada com sucesso"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+    })
+    public ResponseEntity<List<Ong>> listarTodas() {
+        List<Ong> ongs = this.ongService.buscarTodas();
+        return ResponseEntity.ok(ongs);
+    }
+
+    @GetMapping("/cnpj/{cnpj}")
+    @Operation(summary = "Buscar ONG por CNPJ", description = "Retorna uma ONG específica baseada no CNPJ fornecido")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "ONG encontrada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "ONG não encontrada"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+    })
+    public ResponseEntity<Ong> buscarPorCnpj(
+            @Parameter(description = "CNPJ da ONG a ser buscada", required = true)
+            @PathVariable String cnpj) {
+        Ong ong = this.ongService.buscarOngPorCnpj(cnpj);
+        return ResponseEntity.ok(ong);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Buscar ONG por ID", description = "Retorna uma ONG específica baseada no ID fornecido")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "ONG encontrada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "ONG não encontrada"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+    })
+    public ResponseEntity<Ong> buscarPorId(
+            @Parameter(description = "ID da ONG a ser buscada", required = true)
+            @PathVariable Long id) {
+        Ong ong = this.ongService.buscarOngPorId(id);
+        return ResponseEntity.ok(ong);
+    }
+
+    @DeleteMapping("/cnpj/{cnpj}")
+    @Operation(summary = "Deletar ONG por CNPJ", description = "Remove uma ONG do sistema baseada no CNPJ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "ONG deletada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "ONG não encontrada"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+    })
+    public ResponseEntity<Void> deletarPorCnpj(
+            @Parameter(description = "CNPJ da ONG a ser deletada", required = true)
+            @PathVariable String cnpj) {
+        this.ongService.deletarOng(cnpj);
+        return ResponseEntity.noContent().build();
     }
 }
