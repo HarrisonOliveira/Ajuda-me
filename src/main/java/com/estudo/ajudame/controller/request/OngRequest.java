@@ -17,12 +17,12 @@ import com.estudo.ajudame.domain.entity.Ong;
 @AllArgsConstructor
 public class OngRequest {
 
-    @Schema(description = "Nome fantasia da ONG", example = "Instituto Aurora Social", required = true)
+    @Schema(description = "Nome fantasia da ONG", example = "Instituto Aurora Social", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "O nome fantasia é obrigatório.")
     @Size(min = 3, max = 100, message = "O nome fantasia deve ter entre 3 e 100 caracteres.")
     private String nomeFantasia;
 
-    @Schema(description = "CNPJ da ONG (14 dígitos numéricos)", example = "39458276000145", required = true)
+    @Schema(description = "CNPJ da ONG (14 dígitos numéricos)", example = "39458276000145", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "O CNPJ é obrigatório.")
     @Pattern(
             regexp = "\\d{14}",
