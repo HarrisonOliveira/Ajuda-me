@@ -25,11 +25,11 @@ public class Ong {
     private Long id;
     
     @Column(name = "nome_fantasia", nullable = false, length = 100)
-    @Schema(description = "Nome fantasia da ONG", example = "Instituto Aurora Social", required = true)
+    @Schema(description = "Nome fantasia da ONG", example = "Instituto Aurora Social", requiredMode = Schema.RequiredMode.REQUIRED)
     private String nomeFantasia;
     
     @Column(name = "cnpj", nullable = false, unique = true, length = 14)
-    @Schema(description = "CNPJ da ONG (14 dígitos numéricos)", example = "39458276000145", required = true)
+    @Schema(description = "CNPJ da ONG (14 dígitos numéricos)", example = "39458276000145", requiredMode = Schema.RequiredMode.REQUIRED)
     private String cnpj;
     
     @Column(name = "data_cadastro", nullable = false, updatable = false)
