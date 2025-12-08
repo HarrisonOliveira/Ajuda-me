@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/ongs")
@@ -47,7 +47,7 @@ public class OngController {
         return ResponseEntity.ok(ong);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     @Operation(summary = "Buscar ONG por ID", description = "Retorna uma ONG específica baseada no ID fornecido")
     public ResponseEntity<Ong> buscarPorId(
             @Parameter(description = "ID da ONG a ser buscada", required = true)
