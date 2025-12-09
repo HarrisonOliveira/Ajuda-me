@@ -1,5 +1,6 @@
 package com.estudo.ajudame.controller.request;
 
+import com.estudo.ajudame.domain.entity.PontoColeta;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -48,5 +49,17 @@ public class PontoColetaResquest {
     @Schema(description = "Complemento de endereço do Ponto de Coleta")
     @Size(max = 200, message = "O complemento deve ter no máximo 200 caracteres")
     private String complemento;
+
+    public PontoColeta toEntity() {
+        return PontoColeta.builder()
+                .idOng(this.idOng)
+                .cidade(this.cidade)
+                .bairro(this.bairro)
+                .logradouro(this.logradouro)
+                .numero(this.numero)
+                .cep(this.cep)
+                .complemento(this.complemento)
+                .build();
+    }
 
 }
