@@ -23,7 +23,7 @@ public class PontoColeta {
 
     @Column(name = "id_ong", nullable = false)
     @Schema(description = "ID da ong ao qual o Ponto de Coleta pertence", requiredMode = Schema.RequiredMode.REQUIRED)
-    @OneToMany
+    @JoinColumn(name = "ong_id")
     private Long idOng;
 
     @Column(name = "cidade", nullable = false)
