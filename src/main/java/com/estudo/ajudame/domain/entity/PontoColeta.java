@@ -46,8 +46,8 @@ public class PontoColeta {
     @Schema(description = "CEP do Ponto de Coleta", requiredMode = Schema.RequiredMode.REQUIRED)
     private String cep;
 
-    @Column(name = "complemento", nullable = true)
-    @Schema(description = "complemento do endereço do Ponto de Coleta", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Column(name = "complemento")
+    @Schema(description = "complemento do endereço do Ponto de Coleta")
     private String complemento;
 
     @ElementCollection
