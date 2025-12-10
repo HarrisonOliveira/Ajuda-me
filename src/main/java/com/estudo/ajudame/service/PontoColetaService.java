@@ -51,6 +51,7 @@ public class PontoColetaService {
         return this.pontoColetaRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public PontoColeta buscarPontoColetaPeloId(Long id){
         log.info("Buscando ponto de coleta por ID: {}", id);
         return pontoColetaRepository.findById(id)
