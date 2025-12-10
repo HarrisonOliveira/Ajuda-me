@@ -1,13 +1,11 @@
 package com.estudo.ajudame.controller;
 
 import com.estudo.ajudame.controller.request.PontoColetaResquest;
-import com.estudo.ajudame.domain.entity.Ong;
 import com.estudo.ajudame.domain.entity.PontoColeta;
 import com.estudo.ajudame.service.PontoColetaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +38,12 @@ public class PontoColetaController {
     public ResponseEntity<List<PontoColeta>> listarTodosPontosColeta() {
         List<PontoColeta> pontosColeta = this.pontoColetaService.buscarTodosPontosColeta();
         return ResponseEntity.ok(pontosColeta);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Busca um ponto de coleta pelo ID", description = "Busca um ponto de coleta pelo ID")
+    public PontoColeta buscaPontoColetaPeloId(@Valid @PathVariable("id") Long id){
+        return this.pontoColetaService.buscarPontoColetaPeloId(id);
     }
 
     @GetMapping("/cidade/{cidade}")

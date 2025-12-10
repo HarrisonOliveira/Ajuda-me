@@ -51,6 +51,15 @@ public class PontoColetaService {
         return this.pontoColetaRepository.findAll();
     }
 
+    public PontoColeta buscarPontoColetaPeloId(Long id){
+        log.info("Buscando ponto de coleta por ID: {}", id);
+        return pontoColetaRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.warn("Não foi encontrado nenhum ponto de coleta com ID {}", id);
+                    return new PontoColetaNotFoundException("Não foi encontrado nenhum ponto de coleta com ID informado");
+                });
+    }
+
     @Transactional(readOnly = true)
     public List<PontoColeta> buscarTodosPorCidade (String cidade) {
         log.info("Buscando todos os pontos de coleta cadastrados na cidade {}", cidade);
