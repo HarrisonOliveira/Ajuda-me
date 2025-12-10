@@ -33,11 +33,11 @@ public class PontoColetaService {
             throw new OngNotFoundException("Não foi possível encontrar a ONG com ID informado");
         }
 
-        log.info("Cadastrando Ponto de Coleta: {}", pontoColeta.toString());
+        log.info("Cadastrando Ponto de Coleta: {}", pontoColeta);
         try {
             PontoColeta pontoSalvo = this.pontoColetaRepository.save(pontoColeta);
 
-            log.info("Ponto de Coleta cadastrado com sucesso: {}", pontoSalvo.toString());
+            log.info("Ponto de Coleta cadastrado com sucesso: {}", pontoSalvo);
             return pontoSalvo;
         } catch (DataIntegrityViolationException e) {
             log.error("Erro ao cadastrar Ponto de Coleta: {}", e.getMessage());
