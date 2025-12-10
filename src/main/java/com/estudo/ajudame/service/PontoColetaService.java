@@ -1,31 +1,51 @@
 package com.estudo.ajudame.service;
 
+import com.estudo.ajudame.domain.entity.Ong;
 import com.estudo.ajudame.domain.entity.PontoColeta;
+import com.estudo.ajudame.exception.OngNotFoundException;
 import com.estudo.ajudame.exception.PontoColetaAlreadyExistsException;
 import com.estudo.ajudame.repository.PontoColetaRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Slf4j
 public class PontoColetaService {
     private final PontoColetaRepository pontoColetaRepository;
+    private final OngService ongService;
 
-    public PontoColetaService(PontoColetaRepository pontoColetaRepository) {
+    public PontoColetaService(PontoColetaRepository pontoColetaRepository, OngService ongService) {
         this.pontoColetaRepository = pontoColetaRepository;
+        this.ongService = ongService;
     }
 
     public PontoColeta cadastrarPontoColeta(PontoColeta pontoColeta) {
-        log.info("Cadastrando Ponto de Coleta: {}", pontoColeta.toString());
+        log.info("Buscando ONG por ID: {}", pontoColeta.getIdOng());
+        Ong ongEncontrada =  this.ongService.buscarOngPorId(pontoColeta.getIdOng());
 
+        if (ongEncontrada == null) {
+            log.error("Não foi possível encontrar a ONG com o ID {}", pontoColeta.getIdOng());
+            throw new OngNotFoundException("Não foi possível encontrar a ONG com ID informado");
+        }
+
+        log.info("Cadastrando Ponto de Coleta: {}", pontoColeta.toString());
         try {
-            PontoColeta pontoSalvo = pontoColetaRepository.save(pontoColeta);
+            PontoColeta pontoSalvo = this.pontoColetaRepository.save(pontoColeta);
+
             log.info("Ponto de Coleta cadastrado com sucesso: {}", pontoSalvo.toString());
             return pontoSalvo;
         } catch (DataIntegrityViolationException e) {
             log.error("Erro ao cadastrar Ponto de Coleta: {}", e.getMessage());
             throw new PontoColetaAlreadyExistsException("Erro ao cadastrar Ponto de Coleta: Dados inválidos ou duplicados");
         }
+    }
+    @Transactional(readOnly = true)
+    public List<PontoColeta> buscarTodosPontosColeta() {
+        log.info("Buscando todos os pontos de coleta cadastrados");
+        return this.pontoColetaRepository.findAll();
     }
 }
