@@ -12,7 +12,8 @@ import java.util.List;
 @Builder
 @Setter
 @Getter
-@Entity(name = "tb_ponto_coleta")
+@Entity
+@Table(name = "tb_ponto_coleta")
 @Schema(description = "Entidade que representa um ponto de coleta")
 public class PontoColeta {
 
@@ -69,3 +70,4 @@ public class PontoColeta {
     }
 
 }
+
