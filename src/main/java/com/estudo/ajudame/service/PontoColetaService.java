@@ -4,6 +4,7 @@ import com.estudo.ajudame.domain.entity.Ong;
 import com.estudo.ajudame.domain.entity.PontoColeta;
 import com.estudo.ajudame.exception.OngNotFoundException;
 import com.estudo.ajudame.exception.PontoColetaAlreadyExistsException;
+import com.estudo.ajudame.exception.PontoColetaNotFoundException;
 import com.estudo.ajudame.repository.PontoColetaRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -47,5 +48,18 @@ public class PontoColetaService {
     public List<PontoColeta> buscarTodosPontosColeta() {
         log.info("Buscando todos os pontos de coleta cadastrados");
         return this.pontoColetaRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<PontoColeta> buscarTodosPorCidade (String cidade) {
+        log.info("Buscando todos os pontos de coleta cadastrados na cidade {}", cidade);
+        List<PontoColeta> pontosEncontrados = pontoColetaRepository.findAllByCidade(cidade);
+
+        if (pontosEncontrados.isEmpty()) {
+            log.error("Não foi encontrado nenhum ponto de coleta na cidade {}", cidade);
+            throw new PontoColetaNotFoundException("Não foi encontrado nenhum ponto de coleta na cidade informada");
+        }
+
+        return pontosEncontrados;
     }
 }

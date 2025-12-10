@@ -26,16 +26,26 @@ public class PontoColetaController {
     }
 
     @PostMapping
-    @Operation(summary = "Cadastrar novo Ponto de Coleta", description = "Cadastra um novo Ponto de Coleta para uma ONG")
+    @Operation(summary = "Cadastrar novo Ponto de Coleta",
+            description = "Cadastra um novo Ponto de Coleta para uma ONG")
     public ResponseEntity<PontoColeta> cadastrarPontoColeta(@Valid @RequestBody PontoColetaResquest pontoColetaResquest) {
         PontoColeta PontoColetaCadastrado = this.pontoColetaService.cadastrarPontoColeta(pontoColetaResquest.toEntity());
         return ResponseEntity.status(HttpStatus.CREATED).body(PontoColetaCadastrado);
     }
 
     @GetMapping
-    @Operation(summary = "Listar todos os Pontos de Coleta", description = "Retorna uma lista com todos os Pontos de Coleta cadastrados")
+    @Operation(summary = "Listar todos os Pontos de Coleta",
+            description = "Retorna uma lista com todos os Pontos de Coleta cadastrados")
     public ResponseEntity<List<PontoColeta>> listarTodosPontosColeta() {
         List<PontoColeta> pontosColeta = this.pontoColetaService.buscarTodosPontosColeta();
+        return ResponseEntity.ok(pontosColeta);
+    }
+
+    @GetMapping("/cidade/{cidade}")
+    @Operation(summary = "Listar todos os Pontos de Coleta por Cidade",
+            description = "Retorna uma lista com todos os Pontos de Coleta cadastrados na cidade informada")
+    public ResponseEntity<List<PontoColeta>> buscarTodosPorCidade(@Valid @PathVariable("cidade") String cidade) {
+        List<PontoColeta> pontosColeta = this.pontoColetaService.buscarTodosPorCidade(cidade);
         return ResponseEntity.ok(pontosColeta);
     }
 
