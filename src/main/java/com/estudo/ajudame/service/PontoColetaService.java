@@ -44,6 +44,7 @@ public class PontoColetaService {
             throw new PontoColetaAlreadyExistsException("Erro ao cadastrar Ponto de Coleta: Dados inválidos ou duplicados");
         }
     }
+
     @Transactional(readOnly = true)
     public List<PontoColeta> buscarTodosPontosColeta() {
         log.info("Buscando todos os pontos de coleta cadastrados");
@@ -60,6 +61,20 @@ public class PontoColetaService {
             throw new PontoColetaNotFoundException("Não foi encontrado nenhum ponto de coleta na cidade informada");
         }
 
+        return pontosEncontrados;
+    }
+
+    @Transactional(readOnly = true)
+    public List<PontoColeta> buscarTodosPorStatus (String status) {
+        log.info("Buscando todos os pontos de coleta com status {}", status);
+        List<PontoColeta> pontosEncontrados = pontoColetaRepository.findAllByStatus(status);
+
+        if (pontosEncontrados.isEmpty()) {
+            log.error("Não foi encontrado nenhum ponto de coleta com status {}", status);
+            throw new PontoColetaNotFoundException("Não foi encontrado nenhum ponto de coleta com status informado");
+        }
+
+        log.info("Pontos de coleta encontrados com sucesso");
         return pontosEncontrados;
     }
 }
